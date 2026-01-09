@@ -544,7 +544,13 @@ static void change_user(const struct RURI_CONTAINER *_Nonnull container)
 	 * Change uid and gid.
 	 * It will be called before exec(3).
 	 */
+		// On Android, inet group (3003) is required for network access.
+#ifdef __ANDROID__
+	gid_t inet_groups[1] = { 3003 };  // AID_INET
+	setgroups(1, inet_groups);
+#else
 	setgroups(0, NULL);
+#endif
 	if (container->skip_setgroups) {
 		if (container->user != NULL) {
 			if (atoi(container->user) > 0) {
