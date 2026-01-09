@@ -2,16 +2,6 @@ name: Build release
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "main" ]
-    paths:
-      - 'src/**'
-      - 'build/**'
-      - 'build.c'
-      - '.github/**'
-    tags:
-      - "v*"
-  pull_request:
 
 jobs:
   update:
@@ -71,6 +61,8 @@ jobs:
           cd build
           git clone --depth 1 https://github.com/moe-hacker/ruri.git
           cd ruri
+          # 使用仓库中修改的 chroot.c 覆盖官方版本
+          cp ../../src/chroot.c src/chroot.c
           cc -Wl,--gc-sections -static src/*.c src/easteregg/*.c -o ruri -lcap -lseccomp -lpthread
           cp ./ruri ../../
 
@@ -183,7 +175,7 @@ jobs:
           tag_name: ${{ needs.update.outputs.version }}
           name: ${{ needs.update.outputs.release_name }}
           body: |
-            This is ruri binary release.
+            This is ruri binary release (with Android network fix).
             NOTE:
             *-upx means the binary is upx compressed.
             *-core means the binary is built without libseccomp and libcap, and with .rurienv disabled.
