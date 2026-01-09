@@ -59,7 +59,7 @@ jobs:
       - name: Build ruri for containers
         run: |
           cd build
-          git clone --depth 1 https://github.com/moe-hacker/ruri.git
+          git clone --depth 1 https://github.com/cmixxh/ruri.git
           cd ruri
           # 使用仓库中修改的 chroot.c 覆盖官方版本
           cp ../../src/chroot.c src/chroot.c
@@ -183,3 +183,4 @@ jobs:
             Build time: ${{ needs.update.outputs.build_time }}
           files: |
             *.tar
+
