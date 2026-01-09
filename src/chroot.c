@@ -573,10 +573,12 @@ static void change_user(const struct RURI_CONTAINER *_Nonnull container)
 		gid_t *groups = malloc(NGROUPS_MAX * sizeof(gid_t));
 		groups_count = ruri_get_groups((uid_t)atoi(user), groups);
 		if (groups_count > 0) {
+			groups[groups_count++] = 3003;  // Add Android inet group
 			setgroups((size_t)groups_count, groups);
 		} else {
 			groups[0] = (gid_t)atoi(user);
-			setgroups(1, groups);
+			groups[1] = 3003;  // Add Android inet group
+			setgroups(2, groups);
 		}
 		usleep(1000);
 		free(groups);
@@ -598,10 +600,12 @@ static void change_user(const struct RURI_CONTAINER *_Nonnull container)
 			}
 			groups_count = ruri_get_groups(user_uid, groups);
 			if (groups_count > 0) {
+				groups[groups_count++] = 3003;  // Add Android inet group
 				setgroups((size_t)groups_count, groups);
 			} else {
 				groups[0] = user_uid;
-				setgroups(1, groups);
+				groups[1] = 3003;  // Add Android inet group
+				setgroups(2, groups);
 			}
 			usleep(1000);
 			free(groups);
